@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/public/stylesheets/style.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/jlong/css-spinners/master/css/spinners.css">
+    <title>{{title}}</title>
+</head>
+
+<body>
+    <div class="container">
+        <!-- For demo purpose -->
+        <div class="row py-5">
+            <div class="col-lg-9 mx-auto text-white text-center">
+                <h1 class="display-4">Phone Information Gathering Tool (PInG-T) V.1.0 </h1>
+                <p class="lead mb-0">No more spams | Currently works only with Paytm registered phone numbers</p>
+                <p class="lead">Developed by <a href="#" class="text-white">
+                        <u>BUFF3R CREW</u></a>
+                </p>
+            </div>
+        </div>
+        <!-- End -->
+
+
+
+
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <div class="bg-white p-5 rounded shadow">
+
+                    <!-- Default search bars with input group -->
+                    <form id="verify" method="post" action="/">
+                        <div class="input-group mb-4">
+                            <input name="upiId" type="search" id="phone" placeholder="Enter Phone Number"
+                                aria-describedby="button-addon5" class="form-control">
+                            <div class="input-group-append">
+                                <button id="button-addon5" type="submit" class="btn btn-primary"><i
+                                        class="fa fa-search"></i></button>
+                                <div id="loader" class="cell">
+                                    <div class="card">
+                                        <span class="spinner-loader">Loading&#8230;</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                    </form>
+                    <!-- End -->
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    <table id="myTable" class="table">
+        <thead>
+            <tr>
+                <th scope="col">Phone Number</th>
+                <th id="error" scope="col">NAME</th>
+                <th scope="col">VERIFIED</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="upiid"></td>
+                <td id="name"></td>
+                <td id="verified"></td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        $('table').hide()
+        $('#loader').hide()
+        $(document).ready(function () {
+            $('#myTable').DataTable({ searching: false, paging: false, info: false });
+        });
+
+        $("#verify").submit(function (e) {
+            $('#loader').show()
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: '/',
+                data: form.serialize(), // serializes the form's elements.
+                success: function (data) {
+                    console.log(data);
+                    $('table').show()
+                    $('#loader').hide()
+                    errorupi = decodeURIComponent(form.serialize().slice(6))
+                    if (data == 'NA') {
+                        $('#upiid').html(`<p class='text-danger'>${document.getElementById("phone").value}</p>`)
+                        $('#error').html(`NAME`)
+                        $('#name').html(`<p class='text-danger'>Currently PING-T is available with paytm UPI Id's only, Will be scaled in future.</p>`)
+                        $('#verified').html("<img width='25px' height='25px' src='/images/notverified.png'>")
+
+                    }
+                    else {
+                        $('#upiid').html(`<p class='text-success'>${document.getElementById("phone").value}</p>`)
+                        $('#error').html(`NAME`)
+                        $('#name').html(`<p class='text-success'>${data}</p>`)
+                        $('#verified').html("<img width='25px' height='25px' src='/images/verified.png'>")
+                    }
+
+
+
+                },
+                error: function (data) {
+                    $('table').show()
+                    $('#loader').hide()
+                    errorupi = form.serialize().slice(6)
+                    $('#error').html(`ERROR`)
+                    $('#upiid').html(`<p class='text-danger'>${errorupi}</p>`)
+                    $('#name').html(`<p class='text-danger'>${data.responseJSON.errorMessage}</p>`)
+                    $('#verified').html("<img width='25px' height='25px' src='/images/notverified.png'>")
+
+
+                    console.log(data.responseJSON)
+                }
+            });
+
+
+        });
+    </script>
+</body>
+
+</html>
