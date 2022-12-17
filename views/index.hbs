@@ -17,14 +17,16 @@
 </head>
 
 <body>
+    {{>header}}
     <div class="container">
         <!-- For demo purpose -->
+        
         <div class="row py-5">
             <div class="col-lg-9 mx-auto text-white text-center">
-                <h1 class="display-4">Phone Information Gathering Tool (PInG-T) V.1.0 </h1>
-                <p class="lead mb-0">No more spams | Currently works only with Paytm registered phone numbers</p>
+                <h1 class="display-4">Phone Information Gathering Tool (PInG-T) V.1.0 BETA </h1>
+                <p class="lead mb-0">No more spams | Currently works only with Paytm registered phone numbers. </p>
                 <p class="lead">Developed by <a href="#" class="text-white">
-                        <u>BUFF3R CREW</u></a>
+                        <u>Team BUFF3R BYTES</u></a>
                 </p>
             </div>
         </div>
@@ -72,6 +74,7 @@
             <tr>
                 <th scope="col">Phone Number</th>
                 <th id="error" scope="col">NAME</th>
+                 <th id="error" scope="col">LOCATION</th>
                 <th scope="col">VERIFIED</th>
             </tr>
         </thead>
@@ -79,10 +82,12 @@
             <tr>
                 <td id="upiid"></td>
                 <td id="name"></td>
+                <td id="ifsc"></td>
                 <td id="verified"></td>
             </tr>
         </tbody>
     </table>
+    
     <script>
         $('table').hide()
         $('#loader').hide()
@@ -109,14 +114,15 @@
                     if (data == 'NA') {
                         $('#upiid').html(`<p class='text-danger'>${document.getElementById("phone").value}</p>`)
                         $('#error').html(`NAME`)
-                        $('#name').html(`<p class='text-danger'>Currently PING-T is available with paytm UPI Id's only, Will be scaled in future.</p>`)
+                        $('#name').html(`<p class='text-danger'>Currently PING-T is available with paytm UPI Id's only, Will be scaled in future. To test, enter a paytm registered mobile number</p>`)
                         $('#verified').html("<img width='25px' height='25px' src='/images/notverified.png'>")
 
                     }
                     else {
                         $('#upiid').html(`<p class='text-success'>${document.getElementById("phone").value}</p>`)
                         $('#error').html(`NAME`)
-                        $('#name').html(`<p class='text-success'>${data}</p>`)
+                        $('#name').html(`<p class='text-success'>${data[1]}</p>`)
+                        $('#ifsc').html(`<p class='text-success'>${data[0]}</p>`)
                         $('#verified').html("<img width='25px' height='25px' src='/images/verified.png'>")
                     }
 
